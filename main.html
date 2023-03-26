@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Chaosgame</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background: #F9F9F9;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function arcfill(xC, yC, R, Sang, Eang, bool, color) {
+            ctx.beginPath();
+            ctx.arc(xC, yC, R, Sang * Math.PI/180, Eang * Math.PI/180, bool);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        function plot(x, y, size, color, scale) {arcfill(canvas.width/2 + scale*x, canvas.height/2 + scale*-y, size, 0, 360, false, color)}
+
+        function dice(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        r = 0.5
+
+        let Vnum = 3;
+        let Vsize = 8;
+        let Vcolor = "Red";
+
+        let p0x = 0;
+        let p0y = 0;
+        let px = p0x;
+        let py = p0y;
+        let psize = 3;
+        let pcolor = "Blue"
+
+        let choice = 0;
+        let scale = 150;
+
+        function draw(){
+            let Vx = new Array(Vnum);
+            let Vy = new Array(Vnum);
+
+            for (let i = 0; i < Vnum ; i++) {
+                Vx[i] = Math.sin(6.283185307179586*(i/Vnum));
+                Vy[i] = Math.cos(6.283185307179586*(i/Vnum));
+                plot(Vx[i], Vy[i], Vsize, Vcolor, scale);
+            }
+
+            choice = dice(Vnum);
+            px += r * (Vx[choice] - px)
+            py += r * (Vy[choice] - py)
+
+            plot (px, py, psize, pcolor, scale)
+            
+        }
+
+        setInterval(draw, 10);
+    </script>
+</body>
+</html>

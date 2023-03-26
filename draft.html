@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Chaosgame</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background: #F9F9F9;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function drawArrow(fromx, fromy, tox, toy, color) {
+        var headlen = 10; // length of head in pixels
+        var DX = tox - fromx;
+        var DY = toy - fromy;
+        var angle = Math.atan2(DX, DY) - Math.PI/2;
+        fromx = 200 + 80*fromx;
+        fromy = 200 - 80*fromy;
+        tox = 200 + 80*tox;
+        toy = 200 - 80*toy;
+        ctx.beginPath();
+        ctx.moveTo(fromx, fromy);
+        ctx.lineTo(tox, toy);
+        ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.moveTo(tox, toy);
+        ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.closePath();
+        }
+
+        function arcfill(xC, yC, R, Sang, Eang, bool, color) {
+            ctx.beginPath();
+            ctx.arc(xC, yC, R, Sang * Math.PI/180, Eang * Math.PI/180, bool);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        function plot(x, y, size, color) {arcfill(200 + 80*x, 200 + 80*-y, size, 0, 360, false, color)}
+
+        let xi = 0; let yi = 0;
+        Vx = [0, -1.718, 1.718];
+        Vy = [2, -1, -1];
+        
+        for (let i = 0; i < 4; i++) {
+            plot(Vx[i], Vy[i], 8, "Red")
+        }
+
+        //drawArrow(0, 0, 2, 2);
+        plot(0, 0, 5 ,"Blue")
+
+        let dice = 0;
+        let choice = 0;
+        let N = 0;
+        let dx = 0;
+        let dy = 0;
+        function draw() {
+            if (N === 0) {
+                dice = Math.floor(Math.random() * 100);
+                choice = dice%3;
+                dx = (Vx[choice] - xi)/2;
+                dy = (Vy[choice] - yi)/2;
+                drawArrow(xi, yi, xi + dx, yi + dy, "Red");
+            } else {
+                
+                drawArrow(xi, yi, xi + dx, yi + dy, "White");
+                plot(xi+dx, yi+dy,5 ,"Blue")
+                xi = xi + dx; yi = yi + dy;
+            }
+            N++;
+            N %= 2;
+        }
+
+        setInterval(draw, 800);
+    </script>
+</body>
+</html>
